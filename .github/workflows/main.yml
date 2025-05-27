@@ -143,4 +143,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: "✅ All workflow tasks done successfully in repo ${{ github.repository }} by ${{ github.actor }}'s commit.'"
+        message: "Все задачи рабочего процесса успешно выполнены в репозитории ${{ github.repository }} автором коммита  является${{ github.actor }}'"
