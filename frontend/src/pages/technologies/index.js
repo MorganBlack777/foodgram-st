@@ -6,29 +6,57 @@ const Technologies = () => {
   
   return <Main>
     <MetaTags>
-      <title>О проекте</title>
+      <title>Используемые технологии</title>
       <meta name="description" content="Фудграм - Технологии" />
-      <meta property="og:title" content="О проекте" />
+      <meta property="og:title" content="Технологии" />
     </MetaTags>
     
     <Container>
       <h1 className={styles.title}>Технологии</h1>
       <div className={styles.content}>
         <div>
-          <h2 className={styles.subtitle}>Технологии, которые применены в этом проекте:</h2>
+          <h2 className={styles.subtitle}>Backend</h2>
           <div className={styles.text}>
             <ul className={styles.textItem}>
               <li className={styles.textItem}>
-                Python
+                Python 3.12
               </li>
               <li className={styles.textItem}>
-                Django
+                Django 5.2
               </li>
               <li className={styles.textItem}>
                 Django REST Framework
               </li>
               <li className={styles.textItem}>
-                Djoser
+                PostgreSQL
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div>
+          <h2 className={styles.subtitle}>Frontend</h2>
+          <div className={styles.text}>
+            <ul className={styles.textItem}>
+              <li className={styles.textItem}>
+                JS
+              </li>
+              <li className={styles.textItem}>
+                React
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div>
+          <h2 className={styles.subtitle}>Другое</h2>
+          <div className={styles.text}>
+            <ul className={styles.textItem}>
+              <li className={styles.textItem}>
+                Docker / Podman
+              </li>
+              <li className={styles.textItem}>
+                NGINX
               </li>
             </ul>
           </div>

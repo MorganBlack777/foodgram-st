@@ -1,0 +1,16 @@
+pip>=24.3.1
+PyYAML
+
+Django>=5.2
+djangorestframework>=3.15.0
+django-cors-headers>=3.13.0
+djoser>=2.2.2
+Pillow>=10.2.0
+python-dotenv>=1.0.1
+drf-yasg>=1.21.7
+django-filter>=24.1
+drf-extra-fields>=3.7.0
+
+psycopg2-binary>=2.9.3
+
+gunicorn

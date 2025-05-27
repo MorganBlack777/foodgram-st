@@ -12,23 +12,22 @@ const About = ({ updateOrders, orders }) => {
     </MetaTags>
     
     <Container>
-      <h1 className={styles.title}>Привет!</h1>
+      <h1 className={styles.title}>Коротко о проекте</h1>
       <div className={styles.content}>
         <div>
           <h2 className={styles.subtitle}>Что это за сайт?</h2>
           <div className={styles.text}>
             <p className={styles.textItem}>
-              Представляю вам проект, созданный во время обучения в Яндекс Практикуме. Этот проект — часть учебного курса, но он создан полностью самостоятельно.
+              Foodgram - это веб-приложение и API, созданные в рамках курса "Бэкенд-разработка" в РТУ МИРЭА(В партнёрстве с Яндекс Практикумом).
             </p>
             <p className={styles.textItem}>
-              Цель этого сайта — дать возможность пользователям создавать и хранить рецепты на онлайн-платформе. Кроме того, можно скачать список продуктов, необходимых для
-              приготовления блюда, просмотреть рецепты друзей и добавить любимые рецепты в список избранных.
+              Авторизованные пользователи могут публиковать рецепты, добавлять понравившиеся рецепты в избранное, подписываться на публикации других авторов и формировать список покупок для выбранных рецептов.
             </p>
             <p className={styles.textItem}>
-              Чтобы использовать все возможности сайта — нужна регистрация. Проверка адреса электронной почты не осуществляется, вы можете ввести любой email. 
+              Любые посетители сайта могут изучить каталог рецептов.
             </p>
             <p className={styles.textItem}>
-              Заходите и делитесь своими любимыми рецептами!
+              Чтобы использовать все возможности сайта — нужна регистрация. Заходите и делитесь своими любимыми рецептами!
             </p>
           </div>
         </div>
@@ -38,10 +37,10 @@ const About = ({ updateOrders, orders }) => {
           </h2>
           <div className={styles.text}>
             <p className={styles.textItem}>
-              Код проекта находится тут - <a href="#" className={styles.textLink}>Github</a>
+              Код проекта находится тут - <a href="https://github.com/MorganBlack777/foodgram-st" className={styles.textLink}>Github</a>
             </p>
             <p className={styles.textItem}>
-              Автор проекта: <a href="#" className={styles.textLink}>Имя Автора</a>
+              Автор проекта: <a href="https://github.com/MorganBlack777" className={styles.textLink}>Ежов Арсений</a>
             </p>
           </div>
         </aside>
