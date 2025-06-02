@@ -6,7 +6,7 @@ from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from .constants import SHORT_LINK_LETTERS
+from .constants import SHORT_LINK_LETTERS, INGREDIENT_MIN_VALUE
 from core.models import FavoriteRecipe, ShoppingCart, ShortLink
 from ingredient.models import Ingredient
 from user.serializers import CustomUserSerializer
@@ -27,7 +27,7 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 class IngredientForRecipeSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
-    amount = serializers.IntegerField(min_value=1)
+    amount = serializers.IntegerField(min_value=INGREDIENT_MIN_VALUE)
 
     class Meta:
         model = RecipeIngredient
@@ -59,21 +59,18 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get("request")
-        return (
-            not (not request or request.user.is_anonymous)
-            and FavoriteRecipe.objects.filter(
-                user=request.user, recipe=obj
-            ).exists()
-        )
+        if not request or request.user.is_anonymous:
+            return False
+
+
+        return request.user.favorite_recipes.filter(recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get("request")
-        return (
-            not (not request or request.user.is_anonymous)
-            and ShoppingCart.objects.filter(
-                user=request.user, recipe=obj
-            ).exists()
-        )
+        if not request or request.user.is_anonymous:
+            return False
+
+        return request.user.shopping_cart_items.filter(recipe=obj).exists()
 
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
@@ -147,11 +144,11 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                     ]
                 }
             )
-        # Update recipe fields
         super().update(instance, validated_data)
         instance.save()
-        # Update ingredients if provided
+
         instance.recipe_ingredients.all().delete()
+
         recipe_ingredients = self.recipe_ingredients_by_data(
             instance, ingredients_data
         )
@@ -188,18 +185,20 @@ class RecipeShortLinkSerializer(serializers.ModelSerializer):
             else os.environ.get("DOMAIN_NAME", "127.0.0.1")
         )
         protocol = "https" if request and request.is_secure() else "http"
+
         try:
             short_link = obj.short_link
         except ShortLink.DoesNotExist:
             short_link = self.generate_short_link(obj)
-        return urlunparse(
-            (
-                protocol,
-                host,
-                "s",
-                short_link.short_code,
-            )
-        )
+
+        return urlunparse((
+            protocol,
+            host,
+            f"/s/{short_link.short_code}/",
+            "",
+            "",
+            ""
+        ))
 
     def to_representation(self, instance):
         return {"short-link": self.get_short_link(instance)}

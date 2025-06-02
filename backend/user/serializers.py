@@ -7,7 +7,7 @@ from recipe.models import Recipe
 from .models import User
 
 
-class CustomUserCreateSerializer(UserCreateSerializer):
+class UserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
         fields = (
@@ -21,7 +21,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
 
-class CustomUserSerializer(UserSerializer):
+class UserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
     avatar = Base64ImageField(read_only=True, required=False)
 
@@ -54,12 +54,12 @@ class RecipeMinifiedSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "image", "cooking_time")
 
 
-class UserWithRecipesSerializer(CustomUserSerializer):
+class UserWithRecipesSerializer(UserSerializer):
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
-    class Meta(CustomUserSerializer.Meta):
-        fields = CustomUserSerializer.Meta.fields + (
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + (
             "recipes",
             "recipes_count",
         )

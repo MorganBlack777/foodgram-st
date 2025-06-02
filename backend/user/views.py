@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from .models import User
 from core.models import Subscription
 from .serializers import (
-    CustomUserSerializer,
+    UserSerializer,
     SetAvatarSerializer,
     SetPasswordSerializer,
     UserWithRecipesSerializer,
@@ -18,7 +18,7 @@ from .serializers import (
 
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = UserSerializer
 
     def get_permissions(self):
         if self.action in [
