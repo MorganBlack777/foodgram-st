@@ -14,5 +14,16 @@ class Ingredient(models.Model):
         verbose_name="Measurement unit",
     )
 
+    class Meta:
+        verbose_name = "Ingredient"
+        verbose_name_plural = "Ingredients"
+        ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "measurement_unit"],
+                name="unique_ingredient_unit_pair"
+            )
+        ]
+
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.measurement_unit})"

@@ -7,7 +7,7 @@ from recipe.models import Recipe
 from .models import User
 
 
-class UserCreateSerializer(UserCreateSerializer):
+class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
         fields = (
@@ -21,7 +21,7 @@ class UserCreateSerializer(UserCreateSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
 
-class UserSerializer(UserSerializer):
+class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
     avatar = Base64ImageField(read_only=True, required=False)
 
@@ -54,12 +54,12 @@ class RecipeMinifiedSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "image", "cooking_time")
 
 
-class UserWithRecipesSerializer(UserSerializer):
-    recipes = serializers.SerializerMethodField()
+class UserWithRecipesSerializer(CustomUserSerializer):
+    recipes = serializers.SerializerMethodField(source="recipes")
     recipes_count = serializers.SerializerMethodField()
 
-    class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + (
+    class Meta(CustomUserSerializer.Meta):
+        fields = CustomUserSerializer.Meta.fields + (
             "recipes",
             "recipes_count",
         )
@@ -70,7 +70,13 @@ class UserWithRecipesSerializer(UserSerializer):
         recipes = obj.recipes.all()
 
         if recipes_limit:
-            recipes = recipes[: int(recipes_limit)]
+            try:
+                recipes_limit = int(recipes_limit)
+                if recipes_limit > 0:
+                    recipes = recipes[:recipes_limit]
+            except (ValueError, TypeError):
+                # Если не удалось преобразовать в число, игнорируем лимит
+                pass
 
         return RecipeMinifiedSerializer(
             recipes, many=True, context=self.context

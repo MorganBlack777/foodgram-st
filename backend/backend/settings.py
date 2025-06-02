@@ -15,21 +15,19 @@ if os.environ.get("DOTENV", False):
     load_dotenv()
 
 # Базовая директория проекта
-КОРНЕВАЯ_ДИРЕКТОРИЯ = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Настройки безопасности
 # Секретный ключ генерируется автоматически, если не указан в переменных окружения
-СЕКРЕТНЫЙ_КЛЮЧ = os.environ.get(
+SECRET_KEY = os.environ.get(
     "SECRET_KEY", hashlib.sha256(os.urandom(24)).hexdigest()
 )
-SECRET_KEY = СЕКРЕТНЫЙ_КЛЮЧ
 
 # Режим отладки
-РЕЖИМ_ОТЛАДКИ = os.environ.get("DEBUG", False)
-DEBUG = РЕЖИМ_ОТЛАДКИ
+DEBUG = os.environ.get("DEBUG", False)
 
 # Разрешенные хосты
-РАЗРЕШЕННЫЕ_ХОСТЫ = [
+ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "backend",
@@ -38,10 +36,9 @@ DEBUG = РЕЖИМ_ОТЛАДКИ
     f"{os.environ.get('DOMAIN_NAME', '127.0.0.1')}:8080",
     f"{os.environ.get('EXTERNAL_IP')}:8080",
 ]
-ALLOWED_HOSTS = РАЗРЕШЕННЫЕ_ХОСТЫ
 
 # Установленные приложения Django
-УСТАНОВЛЕННЫЕ_ПРИЛОЖЕНИЯ = [
+INSTALLED_APPS = [
     # Стандартные приложения Django
     "django.contrib.admin",
     "django.contrib.auth",
@@ -61,10 +58,9 @@ ALLOWED_HOSTS = РАЗРЕШЕННЫЕ_ХОСТЫ
     "recipe.apps.RecipeConfig",
     "user.apps.UserConfig",
 ]
-INSTALLED_APPS = УСТАНОВЛЕННЫЕ_ПРИЛОЖЕНИЯ
 
 # Промежуточное ПО (middleware)
-ПРОМЕЖУТОЧНОЕ_ПО = [
+MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -73,14 +69,12 @@ INSTALLED_APPS = УСТАНОВЛЕННЫЕ_ПРИЛОЖЕНИЯ
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-MIDDLEWARE = ПРОМЕЖУТОЧНОЕ_ПО
 
 # Конфигурация URL
-КОРНЕВОЙ_URLCONF = "backend.urls"
-ROOT_URLCONF = КОРНЕВОЙ_URLCONF
+ROOT_URLCONF = "backend.urls"
 
 # Настройки шаблонов
-ШАБЛОНЫ = [
+TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
@@ -94,25 +88,23 @@ ROOT_URLCONF = КОРНЕВОЙ_URLCONF
         },
     },
 ]
-TEMPLATES = ШАБЛОНЫ
 
 # Настройки WSGI
-WSGI_ПРИЛОЖЕНИЕ = "backend.wsgi.application"
-WSGI_APPLICATION = WSGI_ПРИЛОЖЕНИЕ
+WSGI_APPLICATION = "backend.wsgi.application"
 
 # Конфигурация баз данных
 # В зависимости от настроек используется либо SQLite, либо PostgreSQL
 if os.environ.get("USE_SQLITE", False) and os.environ.get("USE_SQLITE") != "0":
     # Конфигурация для SQLite
-    БАЗЫ_ДАННЫХ = {
+    DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": КОРНЕВАЯ_ДИРЕКТОРИЯ / "db.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 else:
     # Конфигурация для PostgreSQL
-    БАЗЫ_ДАННЫХ = {
+    DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": os.getenv("POSTGRES_DB", "django"),
@@ -123,10 +115,9 @@ else:
             "OPTIONS": {"options": "-c search_path=foodgram_schema,public"},
         }
     }
-DATABASES = БАЗЫ_ДАННЫХ
 
 # Валидаторы паролей
-ВАЛИДАТОРЫ_ПАРОЛЕЙ = [
+AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
@@ -140,15 +131,10 @@ DATABASES = БАЗЫ_ДАННЫХ
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-AUTH_PASSWORD_VALIDATORS = ВАЛИДАТОРЫ_ПАРОЛЕЙ
 
 # Настройки интернационализации
-КОД_ЯЗЫКА = "ru-ru"
-LANGUAGE_CODE = КОД_ЯЗЫКА
-
-ЧАСОВОЙ_ПОЯС = "Europe/Moscow"
-TIME_ZONE = ЧАСОВОЙ_ПОЯС
-
+LANGUAGE_CODE = "ru-ru"
+TIME_ZONE = "Europe/Moscow"
 USE_I18N = True
 USE_TZ = True
 
@@ -157,28 +143,26 @@ USE_TZ = True
 if os.environ.get("container", False):
     # Настройки для запуска в контейнере
     STATIC_URL = "/static_backend/"
-    STATIC_ROOT = КОРНЕВАЯ_ДИРЕКТОРИЯ / "static_backend"
+    STATIC_ROOT = BASE_DIR / "static_backend"
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = "/static/media"
 else:
     # Настройки для локального запуска
     STATIC_URL = "/static_backend/"
-    STATIC_ROOT = КОРНЕВАЯ_ДИРЕКТОРИЯ / "static_backend"
+    STATIC_ROOT = BASE_DIR / "static_backend"
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = STATIC_ROOT / "media"
 
 # Настройка автоматического поля ID для моделей
-ПОЛЕ_АВТО_ID = "django.db.models.BigAutoField"
-DEFAULT_AUTO_FIELD = ПОЛЕ_АВТО_ID
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Пользовательская модель
-МОДЕЛЬ_ПОЛЬЗОВАТЕЛЯ = "user.User"
-AUTH_USER_MODEL = МОДЕЛЬ_ПОЛЬЗОВАТЕЛЯ
+AUTH_USER_MODEL = "user.User"
 
 # Настройки REST Framework
-REST_FRAMEWORK_НАСТРОЙКИ = {
+REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
@@ -191,10 +175,9 @@ REST_FRAMEWORK_НАСТРОЙКИ = {
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
 }
-REST_FRAMEWORK = REST_FRAMEWORK_НАСТРОЙКИ
 
 # Настройки Djoser (для работы с пользователями API)
-DJOSER_НАСТРОЙКИ = {
+DJOSER = {
     "LOGIN_FIELD": "email",
     "USER_ID_FIELD": "id",
     "HIDE_USERS": False,
@@ -208,4 +191,3 @@ DJOSER_НАСТРОЙКИ = {
         "user_list": ["rest_framework.permissions.AllowAny"],
     },
 }
-DJOSER = DJOSER_НАСТРОЙКИ
