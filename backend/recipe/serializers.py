@@ -2,7 +2,6 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from ingredient.models import Ingredient
-from ingredient.serializers import IngredientSerializer
 from user.serializers import CustomUserSerializer
 from .models import Recipe, RecipeIngredient, Tag
 
@@ -34,9 +33,7 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
 
     def validate_amount(self, value):
         if value <= 0:
-            raise serializers.ValidationError(
-                "Amount must be greater than 0"
-            )
+            raise serializers.ValidationError("Amount must be greater than 0")
         return value
 
 
@@ -104,9 +101,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
         ingredient_ids = [item["id"] for item in value]
         if len(ingredient_ids) != len(set(ingredient_ids)):
-            raise serializers.ValidationError(
-                "Ingredients must be unique."
-            )
+            raise serializers.ValidationError("Ingredients must be unique.")
 
         # Проверяем существование всех ингредиентов
         existing_ingredients = Ingredient.objects.filter(
@@ -116,7 +111,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         for ingredient_data in value:
             if ingredient_data["id"] not in existing_ingredients:
                 raise serializers.ValidationError(
-                    f"Ingredient with id {ingredient_data['id']} does not exist."
+                    f"Ingredient with id "
+                    f"{ingredient_data['id']} does not exist."
                 )
 
         return value
@@ -136,7 +132,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 RecipeIngredient(
                     recipe=recipe,
                     ingredient_id=ingredient_data["id"],
-                    amount=ingredient_data["amount"]
+                    amount=ingredient_data["amount"],
                 )
             )
         RecipeIngredient.objects.bulk_create(recipe_ingredients)

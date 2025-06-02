@@ -21,7 +21,7 @@ class Ingredient(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["name", "measurement_unit"],
-                name="unique_ingredient_unit_pair"
+                name="unique_ingredient_unit_pair",
             )
         ]
 

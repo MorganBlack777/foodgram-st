@@ -7,25 +7,18 @@ from .constants import (
     NAME_MAX_LENGTH,
     TEXT_MAX_LENGTH,
     MIN_COOKING_TIME,
-    MIN_AMOUNT
+    MIN_AMOUNT,
 )
 
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        unique=True,
-        verbose_name="Tag name"
+        max_length=NAME_MAX_LENGTH, unique=True, verbose_name="Tag name"
     )
     slug = models.SlugField(
-        max_length=NAME_MAX_LENGTH,
-        unique=True,
-        verbose_name="Tag slug"
+        max_length=NAME_MAX_LENGTH, unique=True, verbose_name="Tag slug"
     )
-    color = models.CharField(
-        max_length=7,
-        verbose_name="Color in HEX format"
-    )
+    color = models.CharField(max_length=7, verbose_name="Color in HEX format")
 
     class Meta:
         verbose_name = "Tag"
@@ -38,31 +31,26 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        verbose_name="Recipe name"
+        max_length=NAME_MAX_LENGTH, verbose_name="Recipe name"
     )
     text = models.TextField(
-        max_length=TEXT_MAX_LENGTH,
-        verbose_name="Recipe description"
+        max_length=TEXT_MAX_LENGTH, verbose_name="Recipe description"
     )
     cooking_time = models.PositiveIntegerField(
         validators=[MinValueValidator(MIN_COOKING_TIME)],
-        verbose_name="Cooking time in minutes"
+        verbose_name="Cooking time in minutes",
     )
     image = models.ImageField(
-        upload_to="recipes/",
-        verbose_name="Recipe image"
+        upload_to="recipes/", verbose_name="Recipe image"
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="recipes",
-        verbose_name="Recipe author"
+        verbose_name="Recipe author",
     )
     tags = models.ManyToManyField(
-        Tag,
-        related_name="recipes",
-        verbose_name="Recipe tags"
+        Tag, related_name="recipes", verbose_name="Recipe tags"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -78,18 +66,13 @@ class Recipe(models.Model):
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name="recipe_ingredients"
+        Recipe, on_delete=models.CASCADE, related_name="recipe_ingredients"
     )
     ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.CASCADE,
-        related_name="recipe_ingredients"
+        Ingredient, on_delete=models.CASCADE, related_name="recipe_ingredients"
     )
     amount = models.PositiveIntegerField(
-        validators=[MinValueValidator(MIN_AMOUNT)],
-        verbose_name="Amount"
+        validators=[MinValueValidator(MIN_AMOUNT)], verbose_name="Amount"
     )
 
     class Meta:
@@ -98,11 +81,13 @@ class RecipeIngredient(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["recipe", "ingredient"],
-                name="unique_recipe_ingredient"
+                name="unique_recipe_ingredient",
             )
         ]
+
     def __str__(self):
         return f"{self.ingredient.name} in {self.recipe.name}"
+
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(
